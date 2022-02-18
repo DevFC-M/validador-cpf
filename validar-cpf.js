@@ -1,12 +1,12 @@
 export default class ValidarCpf {
     constructor(element){
-        this.element = element
+        this.element = element;
     }
     limpar(cpf) {
         return cpf.replace(/\D/g, '');
     }
     construir(cpf) {
-            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4');
     }
     formatar(cpf){
         const cpfLimpo = this.limpar(cpf);
@@ -19,19 +19,31 @@ export default class ValidarCpf {
     validarMudanca(cpfElement) {
         if(this.validar(cpfElement.value)){
             cpfElement.value = this.formatar(cpfElement.value);
+            cpfElement.classList.add('valido');
+            cpfElement.classList.remove('erro');
+            cpfElement.nextElementSibling.classList.remove('ativar');
         } else {
-            
+            cpfElement.classList.add('erro');
+            cpfElement.classList.remove('valido');
+            cpfElement.nextElementSibling.classList.add('ativar');
         }
         
     }
 
     adicionarEvento() {
         this.element.addEventListener('change', () => {
-            this.validarMudanca(this.element)
+            this.validarMudanca(this.element);
         })
+    }
+    adicionarErroSpan() {
+        const erroElement = document.createElement('span');
+        erroElement.classList.add('erro-text');
+        erroElement.innerText = 'CPF invalido';
+        this.element.parentElement.insertBefore(erroElement, this.element.nextElementSibling);
     }
     iniciar() {
         this.adicionarEvento();
+        this.adicionarErroSpan();
         return this;
     }
 }
